@@ -34,12 +34,8 @@ if __name__ == "__main__":
     device = "cpu"
 
     # load urban sound dataset dataset
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(
-        sample_rate=SAMPLE_RATE,
-        n_fft=1024,
-        hop_length=512,
-        n_mels=64
-    )
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=512,
+                                                           n_mels=128)
 
     n_fft = 256
     win_length = None
@@ -111,12 +107,8 @@ if __name__ == "__main__":
     device = "cpu"
 
     # load urban sound dataset dataset
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(
-        sample_rate=SAMPLE_RATE,
-        n_fft=1024,
-        hop_length=512,
-        n_mels=64
-    )
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=512,
+                                                           n_mels=128)
 
     n_fft = 256
     win_length = None
@@ -136,7 +128,7 @@ if __name__ == "__main__":
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mfcc_transform,
+                            mel_spectrogram,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)
