@@ -1,3 +1,4 @@
+import torch
 from torch import nn
 from torchsummary import summary
 
@@ -7,6 +8,7 @@ class CNNNetwork(nn.Module):
     def __init__(self):
         super().__init__()
         # 4 conv blocks / flatten / linear / softmax
+        self.size = 0
         self.conv1 = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1, padding=2),
             nn.ReLU(),
@@ -44,7 +46,7 @@ class CNNNetwork(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.flatten(x)
-        x = self.linear1(x)
+        x = nn.functional.linear(x.size()[1], 128)
         #x = self.linear2(x)
         x = self.linear3(x)
         logits = self.linear4(x)
