@@ -13,6 +13,10 @@ import gc
 gc.collect()
 torch.cuda.empty_cache()
 
+fv = 400
+tv = 512
+trv = 128
+
 BATCH_SIZE = 256
 EPOCHS = 45
 LEARNING_RATE = 0.001
@@ -75,8 +79,8 @@ if __name__ == "__main__":
     n_mfcc = 256
 
     # instantiating our dataset object and create data loader
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=512,
-                                                           n_mels=128)
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=fv, hop_length=tv,
+                                                           n_mels=trv)
 
     mfcc_transform = torchaudio.transforms.MFCC(sample_rate=SAMPLE_RATE, n_mfcc=n_mfcc, melkwargs={
         'n_fft': n_fft,

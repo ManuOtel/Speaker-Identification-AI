@@ -10,7 +10,7 @@ class_mapping = ["both", "esben", "peter"]
 
 ANNOTATIONS_FILE = "D:\Manu\SDU\Projects\DNN\data_set\Test\data_set.csv"
 AUDIO_DIR = "D:\Manu\SDU\Projects\DNN\data_set\Test"
-SAMPLE_RATE = 16000
+SAMPLE_RATE = 8000
 NUM_SAMPLES = SAMPLE_RATE * 5
 
 
@@ -34,12 +34,8 @@ if __name__ == "__main__":
     device = "cpu"
 
     # load urban sound dataset dataset
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(
-        sample_rate=SAMPLE_RATE,
-        n_fft=1024,
-        hop_length=512,
-        n_mels=64
-    )
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=512,
+                                                           n_mels=128)
 
     n_fft = 256
     win_length = None
@@ -56,7 +52,7 @@ if __name__ == "__main__":
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mfcc_transform,
+                            mel_spectrogram,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)
@@ -111,12 +107,8 @@ if __name__ == "__main__":
     device = "cpu"
 
     # load urban sound dataset dataset
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(
-        sample_rate=SAMPLE_RATE,
-        n_fft=1024,
-        hop_length=512,
-        n_mels=64
-    )
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=512,
+                                                           n_mels=128)
 
     n_fft = 256
     win_length = None
@@ -136,7 +128,7 @@ if __name__ == "__main__":
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mfcc_transform,
+                            mel_spectrogram,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)

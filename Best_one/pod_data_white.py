@@ -1,11 +1,18 @@
 import os
 import pandas as pd
+from audiomentations  import Compose, AddGaussianNoise, TimeStretch, PitchShift, Shift
 import torchaudio
 import torch
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+augment = Compose([
+    AddGaussianNoise(min_amplitude=0.001, max_amplitude=0.015, p=0.5),
+    PitchShift(min_semitones=-4, max_semitones=4, p=0.5),
+    Shift(min_fraction=-0.5, max_fraction=0.5, p=0.5),
+])
 
 
 class PodcastDataset(Dataset):
@@ -30,6 +37,7 @@ class PodcastDataset(Dataset):
         audio_sample_path = self._get_audio_sample_path(index)
         label = self._get_audio_sample_label(index)
         signal, sr = torchaudio.load(audio_sample_path)
+        signal = self._white_noise(signal, sr)
         signal = signal.to(self.device)
         signal = self._resample_if_necessary(signal, sr)
         signal = self._mix_down_if_necessary(signal)
@@ -71,6 +79,10 @@ class PodcastDataset(Dataset):
     def _mix_down_if_necessary(self, signal):
         if signal.shape[0] > 1:
             signal = torch.mean(signal, dim=0, keepdim=True)
+        return signal
+
+    def _white_noise(self, signal, sr):
+        signal = augment(samples=signal, sample_rate=sr)
         return signal
 
 
