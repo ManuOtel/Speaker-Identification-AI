@@ -60,11 +60,10 @@ if __name__ == "__main__":
     else:
         device = "cpu"
 
-    print(device)
+    #print(device)
 
     # instantiating our dataset object and create data loader
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=1024, hop_length=512,
-                                                           n_mels=64)
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=1024, hop_length=512, n_mels=64)
 
     n_fft = 1024
     win_length = None
@@ -77,8 +76,7 @@ if __name__ == "__main__":
         'n_mels': n_mels,
         'hop_length': hop_length,
         'mel_scale': 'htk',
-    }
-    )
+    })
 
     pd = PodcastDataset(annotations_file=ANNOTATIONS_FILE, audio_dir=AUDIO_DIR, transformation=mfcc_transform,
                         target_sample_rate=SAMPLE_RATE, device=device, num_samples=NUM_SAMPLES)

@@ -39,8 +39,8 @@ d1 = datetime.datetime.now()
 for i in range(0, SAMPLE_LEN):
     value = random.randint(-32767, 32767)
     packed_value = struct.pack('h', value)
-    noise_file.write(str(packed_value))
-    noise_file.write(str(packed_value))
+    noise_file.write(packed_value)
+    noise_file.write(packed_value)
 
 d2 = datetime.datetime.now()
 print (d2 - d1), "(time for writing frames)"
@@ -55,7 +55,7 @@ print (d3 - d2), "(time for closing the file)"
 print ("Create file using wave, storing frames in an array and using writeframes only once")
 
 noise_output = wave.open('noise2.wav', 'w')
-noise_output.setparams((1, 4, 16000, 0, 'NONE', 'not compressed'))
+noise_output.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
 
 d1 = datetime.datetime.now()
 values = []
@@ -63,10 +63,11 @@ values = []
 for i in range(0, SAMPLE_LEN):
     value = random.randint(-32767, 32767)
     packed_value = struct.pack('h', value)
-    values.append(str(packed_value))
+    values.append(packed_value)
+    values.append(packed_value)
 
 value_str = ''.join(values)
-noise_output.writeframes(value_str.encode())
+noise_output.writeframes(value_str)
 
 d2 = datetime.datetime.now()
 print (d2 - d1), "(time for writing frames)"

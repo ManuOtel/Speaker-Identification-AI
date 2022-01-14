@@ -1,16 +1,10 @@
 import torch
 import torchaudio
-import matplotlib.pyplot as plt
 
 from cnn import CNNNetwork
 from pod_data import PodcastDataset
 from torch.utils.data import DataLoader
 
-from plotcm import plot_confusion_matrix
-
-fv = 400
-tv = 512
-trv = 128
 
 class_mapping = ["both", "esben", "peter"]
 
@@ -40,8 +34,12 @@ if __name__ == "__main__":
     device = "cpu"
 
     # load urban sound dataset dataset
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=fv, hop_length=tv,
-                                                           n_mels=trv)
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(
+        sample_rate=SAMPLE_RATE,
+        n_fft=1024,
+        hop_length=512,
+        n_mels=64
+    )
 
     n_fft = 256
     win_length = None
@@ -78,12 +76,8 @@ if __name__ == "__main__":
     both = 0
     esben = 0
     peter = 0
-    pp = []
-    ee = []
     for input, target in train_dataloader:
         predicted, expected = predict(cnn, input, target, class_mapping)
-        pp.append(class_mapping.index(predicted))
-        ee.append(class_mapping.index(expected))
         if predicted == expected:
             good = good + 1
         else:
@@ -94,18 +88,6 @@ if __name__ == "__main__":
             esben = esben + 1
         if predicted == "peter":
             peter = peter + 1
-    tpp = torch.tensor(pp)
-    tee = torch.tensor(ee)
-    stacked = torch.stack((tpp, tee), dim=1)
-    stacked[0].tolist()
-    cmt = torch.zeros(3, 3, dtype=torch.int64)
-    for p in stacked:
-        tl, pl = p.tolist()
-        cmt[tl, pl] = cmt[tl, pl] + 1
-    print(cmt)
-    plt.figure(figsize=(3, 3))
-    plot_confusion_matrix(cmt, class_mapping)
-    plt.show()
     print("  ")
     print("  ")
     print("%%%% ---  Test Values --- %%%%")
@@ -120,6 +102,7 @@ if __name__ == "__main__":
     print("  ")
 
 
+
     # load back the model
     cnn = CNNNetwork()
     state_dict = torch.load("feedforwardnet.pth")
@@ -128,8 +111,12 @@ if __name__ == "__main__":
     device = "cpu"
 
     # load urban sound dataset dataset
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=fv, hop_length=tv,
-                                                           n_mels=trv)
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(
+        sample_rate=SAMPLE_RATE,
+        n_fft=1024,
+        hop_length=512,
+        n_mels=64
+    )
 
     n_fft = 256
     win_length = None
@@ -149,7 +136,7 @@ if __name__ == "__main__":
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mel_spectrogram,
+                            mfcc_transform,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)
