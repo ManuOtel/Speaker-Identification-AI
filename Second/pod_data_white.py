@@ -1,18 +1,20 @@
 import os
 import pandas as pd
+import numpy as np
 from audiomentations import LowPassFilter, Compose, AddGaussianSNR, AddGaussianNoise, TimeStretch, PitchShift, Shift
 import torchaudio
 import torch
 import matplotlib.pyplot as plt
+import math
 from torch.utils.data import Dataset
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 augment = Compose([
-    AddGaussianSNR(p=1),
-    PitchShift(min_semitones=-1, max_semitones=1, p=1),
+    AddGaussianSNR(p=0),
+    PitchShift(min_semitones=-1, max_semitones=1, p=0),
     Shift(min_fraction=-0.5, max_fraction=0.5, p=1),
-    LowPassFilter(min_cutoff_freq=300, max_cutoff_freq=500, p=1),
+    #LowPassFilter(min_cutoff_freq=300, max_cutoff_freq=500, p=1),
 ])
 
 
@@ -38,12 +40,18 @@ class PodcastDataset(Dataset):
         audio_sample_path = self._get_audio_sample_path(index)
         label = self._get_audio_sample_label(index)
         signal, sr = torchaudio.load(audio_sample_path)
-        signal = self._white_noise(signal, sr)
         signal = signal.to(self.device)
         signal = self._resample_if_necessary(signal, sr)
         signal = self._mix_down_if_necessary(signal)
         signal = self._cut_if_necessary(signal)
         signal = self._right_pad_if_necessary(signal)
+        signal = signal.to("cpu")
+        signal = signal.cpu().detach().numpy()
+        #signal = np.reshape(signal, (40000, ))
+        signal = self._white_noise(signal, self.target_sample_rate)
+        #signal = np.reshape(signal, (1, 40000))
+        signal = torch.from_numpy(signal)
+        signal = signal.to(self.device)
         if(self.transformation != None):
             signal = self.transformation(signal)
         return signal, label

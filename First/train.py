@@ -85,7 +85,7 @@ if __name__ == "__main__":
     }
     )
 
-    pd = PodcastDataset(annotations_file=ANNOTATIONS_FILE, audio_dir=AUDIO_DIR, transformation=mel_spectrogram,
+    pd = PodcastDataset(annotations_file=ANNOTATIONS_FILE, audio_dir=AUDIO_DIR, transformation=mfcc_transform,
                         target_sample_rate=SAMPLE_RATE, device=device, num_samples=NUM_SAMPLES)
 
     train_dataloader = create_data_loader(pd, BATCH_SIZE)

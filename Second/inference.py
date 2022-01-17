@@ -49,11 +49,17 @@ if __name__ == "__main__":
     mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=fv, hop_length=tv,
                                                            n_mels=trv)
 
-    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=SAMPLE_RATE)
+    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=SAMPLE_RATE, n_mfcc=n_mfcc, log_mels=True, melkwargs={
+        'n_fft': n_fft,
+        'n_mels': n_mels,
+        'hop_length': hop_length,
+        'mel_scale': 'htk',
+    }
+    )
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mel_spectrogram,
+                            mfcc_transform,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)
@@ -126,14 +132,12 @@ if __name__ == "__main__":
     mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=fv, hop_length=tv,
                                                            n_mels=trv)
 
-    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=SAMPLE_RATE)
-
     ANNOTATIONS_FILE = "D:\Manu\SDU\Projects\DNN\data_set\Train\data_set.csv"
     AUDIO_DIR = "D:\Manu\SDU\Projects\DNN\data_set\Train"
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mel_spectrogram,
+                            mfcc_transform,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)

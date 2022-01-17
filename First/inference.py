@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     pd = PodcastDataset(ANNOTATIONS_FILE,
                             AUDIO_DIR,
-                            mel_spectrogram,
+                            mfcc_transform,
                             SAMPLE_RATE,
                             device,
                             NUM_SAMPLES)

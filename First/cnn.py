@@ -32,7 +32,7 @@ class CNNNetwork(nn.Module):
             nn.BatchNorm2d(16)
         )
         self.flatten = nn.Flatten()
-        self.linear1 = nn.Linear(480, 128)
+        self.linear1 = nn.Linear(2992, 128)
         #self.linear2 = nn.Linear(2048, 128)
         self.linear3 = nn.Linear(128, 32)
         self.linear4 = nn.Linear(32, 3)

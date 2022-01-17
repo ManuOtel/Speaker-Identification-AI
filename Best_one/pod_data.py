@@ -83,7 +83,7 @@ if __name__ == "__main__":
     else:
         device = "cpu"
 
-    sample_rate = 8000
+    sample_rate = 16000
     num_samples = sample_rate*5
 
     mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=sample_rate, n_fft=1024, hop_length=512,
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     n_fft = 256
     win_length = None
     hop_length = 256
-    n_mels = 512
+    n_mels = 1024
     n_mfcc = 256
 
     mfcc_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate, n_mfcc=n_mfcc, melkwargs={

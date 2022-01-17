@@ -7,6 +7,9 @@ from torch.utils.data import Dataset
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
+fv = 700
+tv = 128
+trv = 128
 
 class PodcastDataset(Dataset):
 
@@ -37,6 +40,7 @@ class PodcastDataset(Dataset):
         signal = self._right_pad_if_necessary(signal)
         if(self.transformation != None):
             signal = self.transformation(signal)
+
         return signal, label
 
     # list[1] -> list.__getitem__(1)
@@ -86,8 +90,8 @@ if __name__ == "__main__":
     sample_rate = 16000
     num_samples = sample_rate*5
 
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=sample_rate, n_fft=1024, hop_length=512,
-                                                           n_mels=128)
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=sample_rate, n_fft=fv, hop_length=tv,
+                                                           n_mels=trv)
 
     n_fft = 256
     win_length = None
@@ -95,13 +99,15 @@ if __name__ == "__main__":
     n_mels = 1024
     n_mfcc = 512
 
-    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate, n_mfcc=n_mfcc, melkwargs={
+    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate, n_mfcc=n_mfcc, log_mels=True, melkwargs={
         'n_fft': n_fft,
         'n_mels': n_mels,
         'hop_length': hop_length,
         'mel_scale': 'htk',
     }
     )
+
+    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate, log_mels=True)
 
     pds = PodcastDataset(annotations_file=annotations_file, audio_dir=audio_dir, transformation=mfcc_transform,
                          target_sample_rate=sample_rate, device=device, num_samples=num_samples)

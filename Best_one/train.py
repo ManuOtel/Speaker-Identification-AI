@@ -5,21 +5,20 @@ import numpy as np
 from torch import nn
 from torch.utils.data import DataLoader
 
-from pod_data_white import PodcastDataset as PodcastDatasetWhite
-from pod_data import PodcastDataset as PodcastDataset
+from pod_data import PodcastDataset
 from cnn import CNNNetwork
 
 import gc
 gc.collect()
 torch.cuda.empty_cache()
 
-BATCH_SIZE = 256
+BATCH_SIZE = 512
 EPOCHS = 45
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.0007
 
 ANNOTATIONS_FILE = "D:\Manu\SDU\Projects\DNN\data_set\Train\data_set.csv"
 AUDIO_DIR = "D:\Manu\SDU\Projects\DNN\data_set\Train"
-SAMPLE_RATE = 8000
+SAMPLE_RATE = 16000
 NUM_SAMPLES = SAMPLE_RATE * 5
 
 
@@ -68,15 +67,15 @@ if __name__ == "__main__":
     print(device)
     torch.cuda.empty_cache()
 
+    # instantiating our dataset object and create data loader
+    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=1024, hop_length=512,
+                                                           n_mels=64)
+
     n_fft = 256
     win_length = None
     hop_length = 256
-    n_mels = 256
+    n_mels = 1024
     n_mfcc = 256
-
-    # instantiating our dataset object and create data loader
-    mel_spectrogram = torchaudio.transforms.MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=512,
-                                                           n_mels=128)
 
     mfcc_transform = torchaudio.transforms.MFCC(sample_rate=SAMPLE_RATE, n_mfcc=n_mfcc, melkwargs={
         'n_fft': n_fft,
@@ -86,14 +85,10 @@ if __name__ == "__main__":
     }
     )
 
-    pd = PodcastDataset(annotations_file=ANNOTATIONS_FILE, audio_dir=AUDIO_DIR, transformation=mel_spectrogram,
-                        target_sample_rate=SAMPLE_RATE, device=device, num_samples=NUM_SAMPLES)
-    pdw = PodcastDataset(annotations_file=ANNOTATIONS_FILE, audio_dir=AUDIO_DIR, transformation=mel_spectrogram,
+    pd = PodcastDataset(annotations_file=ANNOTATIONS_FILE, audio_dir=AUDIO_DIR, transformation=mfcc_transform,
                         target_sample_rate=SAMPLE_RATE, device=device, num_samples=NUM_SAMPLES)
 
-    pdf = torch.utils.data.ConcatDataset([pd, pdw])
-
-    train_dataloader = create_data_loader(pdf, BATCH_SIZE)
+    train_dataloader = create_data_loader(pd, BATCH_SIZE)
 
     # construct model and assign it to device
     cnn = CNNNetwork().to(device)
