@@ -1,6 +1,6 @@
-# Voice Recognition AI
+# Speaker Identification AI
 
-This repository contains the code for a university project based on developing a Voice recognition AI using very limited data. The main target was to train a simple CNN for recognising the speaker in each data sample. The data come from the podcast 'Her Går Det Godt', and the system was designed to identify one or both hosts when they are speaking, based on 5 second samples. 
+This repository contains the code for a university project based on developing a Speaker Identification AI using very limited data. The main target was to train a simple CNN for recognising the speaker in each data sample. The data come from the podcast 'Her Går Det Godt', and the system was designed to identify one or both hosts when they are speaking, based on 5 second samples. 
 
 The project was conducted at the University of Southern Denmark, for the Deep Neural Networks course.
 
