@@ -27,6 +27,8 @@ pip install -r requirements.txt
 
 ## Usage
 
+Before starting the training/testing make sure to extract the data set from the .rar archive inside ./dataset folder. 
+
  - Training script:
 ```bash
 cd src
